@@ -1,9 +1,9 @@
-# JupyterHub on kubernetes
+# JupyterHub on Kubernetes
 
 
 ### We will install and test JupyterHub in k8s as a service from Mail.ru Cloud Solutions
 
-#### Tested with Kubernetes 1.20.4
+#### Tested with Kubernetes 1.20.4, Ubuntu 20.04, Helm chart for JupyterHub 1.1.3, JupyterHub 1.4.2
 
 
 ## Running JupyterHub on Kubernetes useful links
@@ -16,12 +16,18 @@ https://zero-to-jupyterhub.readthedocs.io/en/latest/index.html
 ## Prerequisites
 
 ### Create K8s cluster in mcs and download kubeconfig
-Instruction: https://mcs.mail.ru/help/ru_RU/k8s-start/create-k8s
-
-Kubernetes as a Service: https://mcs.mail.ru/app/services/containers/add/
+Instruction: https://mcs.mail.ru/help/ru_RU/k8s-start/create-k8s  
+Kubernetes as a Service: https://mcs.mail.ru/app/services/containers/add/  
 
 ### Install kubectl
-https://mcs.mail.ru/help/ru_RU/k8s-start/connect-k8s
+https://mcs.mail.ru/help/ru_RU/k8s-start/connect-k8s  
+https://kubernetes.io/ru/docs/tasks/tools/install-kubectl/  
+
+```console
+curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+```
 
 ### Set path to kubeconfig for kubectl
 ```console
@@ -36,11 +42,17 @@ complete -F __start_kubectl k
 
 ### Install helm
 https://helm.sh/docs/intro/install/
+```console
+curl https://raw.githubusercontent.com/helm/helm/HEAD/scripts/get-helm-3 | bash
+```
 
-### (Optional) Install Docker if you want to build your own images for JupyterHub and log into a Docker registry
-https://docs.docker.com/engine/install/ubuntu/
-https://docs.docker.com/engine/reference/commandline/login/
-https://ropenscilabs.github.io/r-docker-tutorial/04-Dockerhub.html 
+### (Optional) Install Docker if you want to build your own images for JupyterHub and log into a Docker registry  
+https://docs.docker.com/engine/install/ubuntu/  
+https://docs.docker.com/engine/reference/commandline/login/  
+https://ropenscilabs.github.io/r-docker-tutorial/04-Dockerhub.html   
+
+
+## JupyterHub installation and testing part
 
 ### Install JupyterHub
 ```console
@@ -48,7 +60,7 @@ helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
 helm repo update
 ```
 
-##### Create config for basic installation
+#### Create config for basic installation
 warning: this config for demo use only! NOT A PRODUCTION SOLUTION
 ```console
 nano config_basic.yaml
@@ -73,7 +85,7 @@ hub:
       authenticator_class: dummy
 ``` 
 
-###### Apply basic config and install JupyterHub
+#### Apply basic config and install JupyterHub
 ```console
 helm upgrade --cleanup-on-fail \
   --install defaultinstall jupyterhub/jupyterhub \
@@ -84,17 +96,15 @@ helm upgrade --cleanup-on-fail \
   --timeout 20m0s
 ```
 
-To access JupyterHub we need to find external ip
+To access JupyterHub we need to find external ip  
 ```console
 kubectl get services -n jupyterhub
 ```
-Look for LoadBalancer Service type. Then look for external ip.
-You can access JupyterHub by entering this external ip to browser.
+Look for LoadBalancer Service type. Then look for external ip.  
+You can access JupyterHub by entering this external ip to browser.  
 
 
-
-
-##### Create config for advanced installation
+#### Create config for advanced installation
 Let`s add some security measures
 
 
@@ -134,7 +144,7 @@ proxy:
 ``` 
 
 
-###### Apply new config and upgrade JupyterHub
+#### Apply new config and upgrade JupyterHub
 ```console
 helm upgrade --cleanup-on-fail \
   defaultinstall jupyterhub/jupyterhub \
@@ -144,34 +154,34 @@ helm upgrade --cleanup-on-fail \
   --timeout 20m0s
 ```
 
-Also we can enable https and integrate JupyterHub with Github for authentication
-Read more here
-https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/security.html#https
-https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/authentication.html#github
+Also we can enable https and integrate JupyterHub with Github for authentication  
+Read more here:    
+https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/security.html#https  
+https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/authentication.html#github  
 
-You can find working examples of config.yaml in config directory in this repo. 
-Read config_https_github.yaml
-
-
+You can find working examples of config.yaml in config directory in this repo.   
+Read config_https_github.yaml  
 
 
-### INTEL oneAPI demo 
 
-You could read more about oneAPI:
-https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html
-https://medium.com/intel-analytics-software/save-time-and-money-with-intel-extension-for-scikit-learn-33627425ae4 
 
-You need to install Docker if you want to build your own image or you could use our image: mcscloud/jupyter-ds-intel-mcs:v2
-Login to Docker Hub
+## INTEL oneAPI demo 
+
+You could read more about oneAPI:    
+https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html  
+https://medium.com/intel-analytics-software/save-time-and-money-with-intel-extension-for-scikit-learn-33627425ae4   
+
+You need to install Docker if you want to build your own image or you could use our image: mcscloud/jupyter-ds-intel-mcs:v2  
+#### Login to Docker Hub  
 ```console
 sudo docker login --username=YOUR_DOCKERHUB_USER_NAME
 #sudo docker login --username=mcscloud
 ```
-additional instruction about Docker Hub 
+additional instruction about Docker Hub   
 https://jsta.github.io/r-docker-tutorial/04-Dockerhub.html
 
 
-##### Create Dockerfile 
+#### Create Dockerfile 
 ```console
 #make separate dir
 mkdir ~/intel_based_docker_image && cd ~/intel_based_docker_image
@@ -190,7 +200,7 @@ RUN pip install --no-cache-dir jupyterlab-git
 RUN conda install -c conda-forge scikit-learn-intelex
 ```
 
-##### Build and push image
+#### Build and push image
 Let`s build custom image with Intel ML package
 ```console
 export YOUR_DOCKER_REPO=
@@ -205,7 +215,7 @@ sudo docker tag YOUR_IMAGE_ID  $YOUR_DOCKER_REPO/jupyter-ds-intel-mcs:v2
 sudo docker push $YOUR_DOCKER_REPO/jupyter-ds-intel-mcs:v2
 ```
 
-##### Create config for JupyterHub with Intel image
+#### Create config for JupyterHub with Intel image
 ```console
 nano config_intel.yaml
 #paste this to config_intel.yaml
@@ -262,7 +272,7 @@ proxy:
 #      - 91.74.148.161/32
 ``` 
 
-###### Apply new config and upgrade JupyterHub
+#### Apply new config and upgrade JupyterHub
 ```console
 helm upgrade --cleanup-on-fail \
   defaultinstall jupyterhub/jupyterhub \
@@ -272,7 +282,7 @@ helm upgrade --cleanup-on-fail \
   --timeout 20m0s
 ```
 
-To use JupyterHub, enter the external IP for the proxy-public service in to a browser.
+To use JupyterHub, enter the external IP for the proxy-public service in to a browser.  
 ```console
 kubectl get service -n jupyterhub
 ```
