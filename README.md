@@ -9,11 +9,26 @@
 ## Running JupyterHub on Kubernetes useful links
 
 ### Official doc
-https://zero-to-jupyterhub.readthedocs.io/en/latest/index.html
+https://zero-to-jupyterhub.readthedocs.io/en/latest/index.html   
+https://zero-to-jupyterhub.readthedocs.io/en/latest/jupyterhub/installation.html   
 
 
 
 ## Prerequisites
+
+### (Optional) Create host VM  
+It would be easier to create a host VM in cloud  
+All work in the cloud can be done from that VM  
+You can install kubectl, Helm, Docker and all other things on this VM and don`t mess with your own local machine  
+
+How to create VM: https://mcs.mail.ru/help/ru_RU/create-vm/vm-quick-create  
+How to connect: https://mcs.mail.ru/help/ru_RU/vm-connect/vm-connect-nix  
+Steps:  
+1. Create VM  
+2. Connect to VM with SSH  
+3. Perform all steps described further in this instruction from this VM  
+4. Enjoy cloud:)  
+
 
 ### Create K8s cluster in mcs and download kubeconfig
 Instruction: https://mcs.mail.ru/help/ru_RU/k8s-start/create-k8s  
@@ -77,7 +92,7 @@ hub:
       admin_users:
         - admin
       allowed_users:
-        - your_anothernon_admin_user
+        - your_another_non_admin_user
 #DummyAuthenticator not for production
     DummyAuthenticator:
       password: insertyourpasswordhereMVeP2VXfr
@@ -153,11 +168,15 @@ helm upgrade --cleanup-on-fail \
   --values config_lb.yaml
   --timeout 20m0s
 ```
+You can check versions of Helm chart and JupyterHub here:   
+https://jupyterhub.github.io/helm-chart/   
+
 
 Also we can enable https and integrate JupyterHub with Github for authentication  
 Read more here:    
-https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/security.html#https  
-https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/authentication.html#github  
+https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/security.html#https   
+https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/authentication.html#github    
+https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/creating-a-new-organization-from-scratch     
 
 You can find working examples of config.yaml in config directory in this repo.   
 Read config_https_github.yaml  
@@ -286,3 +305,8 @@ To use JupyterHub, enter the external IP for the proxy-public service in to a br
 ```console
 kubectl get service -n jupyterhub
 ```
+
+#### Help
+If you have any questions you can ask me here:  
+Telegram @volinski  
+Email a.n.volinski@ya.ru  
