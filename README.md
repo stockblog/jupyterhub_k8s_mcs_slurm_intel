@@ -75,6 +75,13 @@ helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
 helm repo update
 ```
 
+Also we need to mark one of storage classes as default for successful installation
+```console
+kubectl get storageclass
+kubectl patch storageclass csi-ceph-ssd-dp1-retain  -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
+
+
 #### Create config for basic installation
 warning: this config for demo use only! NOT A PRODUCTION SOLUTION
 ```console
@@ -107,7 +114,7 @@ helm upgrade --cleanup-on-fail \
   --namespace jupyterhub \
   --create-namespace \
   --version=1.1.3 \
-  --values config_basic.yaml
+  --values config_basic.yaml \
   --timeout 20m0s
 ```
 
@@ -118,6 +125,14 @@ kubectl get services -n jupyterhub
 Look for LoadBalancer Service type. Then look for external ip.  
 You can access JupyterHub by entering this external ip to browser.  
 
+
+For debug and troubleshouting
+```console
+kubectl get pods -n jupyterhub
+kubectl get events -n jupyterhub
+kubectl describe pod <pod-name> -n jupyterhub
+kubectl logs <POD_NAME> -n jupyterhub
+```
 
 #### Create config for advanced installation
 Let`s add some security measures
@@ -153,7 +168,7 @@ proxy:
 #https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/security.html#restricting-load-balancer-access
     loadBalancerSourceRanges:
       - PLACE_YOUR_IP_HERE
-	  - PLACE_ANOTHER_YOUR_IP_HERE_OR_REMOVE_THIS_LINE
+      - PLACE_ANOTHER_YOUR_IP_HERE_OR_REMOVE_THIS_LINE
 #EXAMPLE
 #      - 91.74.148.161/32
 ``` 
@@ -165,7 +180,7 @@ helm upgrade --cleanup-on-fail \
   defaultinstall jupyterhub/jupyterhub \
   --namespace jupyterhub \
   --version=1.1.3 \
-  --values config_lb.yaml
+  --values config_lb.yaml \
   --timeout 20m0s
 ```
 You can check versions of Helm chart and JupyterHub here:   
@@ -235,6 +250,9 @@ sudo docker push $YOUR_DOCKER_REPO/jupyter-ds-intel-mcs:v2
 ```
 
 #### Create config for JupyterHub with Intel image
+If you want to test Intel libraries for ML you need more resources  
+As you can see we add cpu and memory requirements to config under singleuser part  
+
 ```console
 nano config_intel.yaml
 #paste this to config_intel.yaml
@@ -246,6 +264,12 @@ singleuser:
 #you could use different storage classes
 #get storage classes with: kubectl get storageclasses.storage.k8s.io 
       storageClass: csi-ceph-ssd-dp1-retain
+  cpu:
+    limit: 4
+    guarantee: 3
+  memory:
+    limit: 4G
+    guarantee: 512M
   # Defines the default image
   image:
     name: jupyter/minimal-notebook
@@ -286,7 +310,7 @@ proxy:
 #https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/security.html#restricting-load-balancer-access
     loadBalancerSourceRanges:
       - PLACE_YOUR_IP_HERE
-	  - PLACE_ANOTHER_YOUR_IP_HERE_OR_REMOVE_THIS_LINE
+      - PLACE_ANOTHER_YOUR_IP_HERE_OR_REMOVE_THIS_LINE
 #EXAMPLE
 #      - 91.74.148.161/32
 ``` 
@@ -297,7 +321,7 @@ helm upgrade --cleanup-on-fail \
   defaultinstall jupyterhub/jupyterhub \
   --namespace jupyterhub \
   --version=1.1.3 \
-  --values config_intel.yaml
+  --values config_intel.yaml \
   --timeout 20m0s
 ```
 
