@@ -1,0 +1,34 @@
+#https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/security.html#https  
+#https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/authentication.html#github 
+#https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/creating-a-new-organization-from-scratch 
+singleuser:
+  defaultUrl: "/lab"
+  storage:
+    dynamic:
+      storageClass: csi-ceph-ssd-dp1-retain 
+hub:
+  config:
+    Authenticator:
+      admin_users: 
+        - YOUR_GITHUB_LOGIN
+    GitHubOAuthenticator:
+      client_id: YOUR_CLIENT_ID_GITHUB
+      client_secret: YOUR_SECRET_FROM_GITHUB
+      oauth_callback_url: https://your-domain-name.com/hub/oauth_callback
+      allowed_organizations:
+        - YOUR_ORG_NAME_FROM_GITHUB
+      scope:
+        - read:org
+    JupyterHub:
+      authenticator_class: github
+proxy:
+  https:
+    enabled: true
+    hosts:
+      - your-domain-name.com
+    letsencrypt:
+      contactEmail: YOUR_EMAIL
+  service:
+    loadBalancerIP: PLACE_EXTERNAL_IP_OF_LOADBALANCER
+    loadBalancerSourceRanges:
+      - PLACE_YOUR_IP

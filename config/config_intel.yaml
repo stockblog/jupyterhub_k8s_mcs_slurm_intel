@@ -1,0 +1,56 @@
+singleuser:
+  defaultUrl: "/lab"
+  storage:
+    dynamic:
+#you could use different storage classes
+#get storage classes with: kubectl get storageclasses.storage.k8s.io 
+      storageClass: csi-ceph-ssd-dp1-retain
+  cpu:
+    limit: 4
+    guarantee: 3
+  memory:
+    limit: 4G
+    guarantee: 512M
+  # Defines the default image
+  image:
+    name: jupyter/minimal-notebook
+    tag: hub-1.4.2
+  profileList:
+    - display_name: "Minimal environment"
+      description: "To avoid too much bells and whistles: Python."
+      default: true
+    - display_name: "Tensorflow"
+      description: "If you want the additional bells and whistles: Python, R, and Julia."
+      kubespawner_override:
+        image: jupyter/tensorflow-notebook:hub-1.4.2
+    - display_name: "Spark environment"
+      description: "The Jupyter Stacks spark image!"
+      kubespawner_override:
+        image: jupyter/all-spark-notebook:hub-1.4.2
+    - display_name: "JupyterLab with Intel libraries"
+      description: "Use some Intel optimizations"
+      kubespawner_override:
+        image: PLACE_YOUR_DOCKER_REPO_OR_USE_mcscloud/jupyter-ds-intel-mcs:v2
+#       image: mcscloud/jupyter-ds-intel-mcs:v2
+hub:
+  config:
+    Authenticator:
+      admin_users:
+        - admin
+      allowed_users:
+        - your_another_non_admin_user
+#DummyAuthenticator not for production
+    DummyAuthenticator:
+      password: insertyourpasswordhereMVeP2VXfr
+    JupyterHub:
+      authenticator_class: dummy
+proxy:
+  service:
+#if you set loadBalancerSourceRanges, you can access JupyterHub only from ip address from this setting.
+#you can set a bunch of IP adresses
+#https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/security.html#restricting-load-balancer-access
+    loadBalancerSourceRanges:
+      - PLACE_YOUR_IP_HERE
+      - PLACE_ANOTHER_YOUR_IP_HERE_OR_REMOVE_THIS_LINE
+#EXAMPLE
+#      - 91.74.148.161/32
