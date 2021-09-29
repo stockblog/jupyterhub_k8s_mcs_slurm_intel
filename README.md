@@ -265,10 +265,10 @@ singleuser:
 #get storage classes with: kubectl get storageclasses.storage.k8s.io 
       storageClass: csi-ceph-ssd-dp1-retain
   cpu:
-    limit: 4
-    guarantee: 3
+    limit: 3
+    guarantee: 2
   memory:
-    limit: 4G
+    limit: 3G
     guarantee: 512M
   # Defines the default image
   image:
@@ -324,6 +324,10 @@ helm upgrade --cleanup-on-fail \
   --values config_intel.yaml \
   --timeout 20m0s
 ```
+
+For testing Intel library clone repo https://github.com/intel/scikit-learn-intelex with Git extension already installed in Jupyter  
+You can find Git extension on the left vertical bar  
+After cloning repo you can find test Notebooks in scikit-learn-intelex/examples/notebooks/
 
 To use JupyterHub, enter the external IP for the proxy-public service in to a browser.  
 ```console
