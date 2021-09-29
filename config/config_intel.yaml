@@ -6,10 +6,10 @@ singleuser:
 #get storage classes with: kubectl get storageclasses.storage.k8s.io 
       storageClass: csi-ceph-ssd-dp1-retain
   cpu:
-    limit: 4
-    guarantee: 3
+    limit: 3
+    guarantee: 2
   memory:
-    limit: 4G
+    limit: 3G
     guarantee: 512M
   # Defines the default image
   image:
