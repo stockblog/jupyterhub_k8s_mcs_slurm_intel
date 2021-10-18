@@ -1,7 +1,7 @@
 # JupyterHub on Kubernetes
 
 
-### We will install and test JupyterHub in k8s as a service from Mail.ru Cloud Solutions
+### We will install and test JupyterHub in k8s as a service from VK Cloud Solutions
 
 #### Tested with Kubernetes 1.20.4, Ubuntu 20.04, Helm chart for JupyterHub 1.1.3, JupyterHub 1.4.2
 
