@@ -78,7 +78,7 @@ helm repo update
 Also we need to mark one of storage classes as default for successful installation
 ```console
 kubectl get storageclass
-kubectl patch storageclass csi-ceph-ssd-dp1-retain  -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+kubectl patch storageclass csi-ceph-ssd-ms1-retain  -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```
 
 
