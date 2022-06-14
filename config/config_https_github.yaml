@@ -5,7 +5,7 @@ singleuser:
   defaultUrl: "/lab"
   storage:
     dynamic:
-      storageClass: csi-ceph-ssd-dp1-retain 
+      storageClass: csi-ceph-ssd-ms1-retain 
 hub:
   config:
     Authenticator:
