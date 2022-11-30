@@ -34,6 +34,9 @@ Steps:
 Instruction: https://mcs.mail.ru/help/ru_RU/k8s-start/create-k8s  
 Kubernetes as a Service: https://mcs.mail.ru/app/services/containers/add/  
 
+You may have trouble with Gatekeeper. So please delete it. 
+https://mcs.mail.ru/docs/base/k8s/k8s-addons/k8s-gatekeeper/k8s-opa#udalenie
+
 ### Install kubectl
 https://mcs.mail.ru/help/ru_RU/k8s-start/connect-k8s  
 https://kubernetes.io/ru/docs/tasks/tools/install-kubectl/  
