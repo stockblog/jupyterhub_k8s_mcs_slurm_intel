@@ -38,7 +38,7 @@ You may have trouble with Gatekeeper. So please delete it.
 https://mcs.mail.ru/docs/base/k8s/k8s-addons/k8s-gatekeeper/k8s-opa#udalenie
 
 ### Install kubectl
-https://mcs.mail.ru/help/ru_RU/k8s-start/connect-k8s  
+[https://mcs.mail.ru/help/ru_RU/k8s-start/connect-k8s  ](https://mcs.mail.ru/docs/ru/base/k8s/connect/kubectl)  
 https://kubernetes.io/ru/docs/tasks/tools/install-kubectl/  
 
 ```console
