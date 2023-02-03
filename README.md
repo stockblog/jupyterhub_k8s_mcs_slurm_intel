@@ -22,7 +22,7 @@ All work in the cloud can be done from that VM
 You can install kubectl, Helm, Docker and all other things on this VM and don`t mess with your own local machine  
 
 How to create VM: https://mcs.mail.ru/help/ru_RU/create-vm/vm-quick-create  
-How to connect: https://mcs.mail.ru/help/ru_RU/vm-connect/vm-connect-nix  
+How to connect: https://mcs.mail.ru/docs/ru/base/iaas/vm-start/vm-connect/vm-connect-nix 
 Steps:  
 1. Create VM  
 2. Connect to VM with SSH  
