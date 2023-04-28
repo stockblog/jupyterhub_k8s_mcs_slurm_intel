@@ -95,7 +95,13 @@ singleuser:
   defaultUrl: "/lab"
   storage:
     dynamic:
-      storageClass: csi-ceph-ssd-ms1-retain 
+      storageClass: csi-ceph-ssd-ms1-retain
+  cpu:
+    limit: .5
+    guarantee: .5
+  memory:
+    limit: .256
+    guarantee: .512
 hub:
   config:
     Authenticator:
@@ -152,6 +158,12 @@ singleuser:
 #you could use different storage classes
 #get storage classes with: kubectl get storageclasses.storage.k8s.io 
       storageClass: csi-ceph-ssd-ms1-retain 
+  cpu:
+    limit: .5
+    guarantee: .5
+  memory:
+    limit: .256
+    guarantee: .512
 hub:
   config:
     Authenticator:
