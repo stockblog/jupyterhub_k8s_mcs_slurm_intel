@@ -78,7 +78,7 @@ helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
 helm repo update
 ```
 
-Also we need to mark one of storage classes as default for successful installation.
+Also we need to mark one of storage classes as default for successful installation.  
 ATTENTION: WATCH your k8s cluster availability zone. Storage class must be equal k8s cluster zone.
 If cluster in GZ1 or any other zone, you should patch storageclass with this zone.
 ```console
