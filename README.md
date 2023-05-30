@@ -93,6 +93,7 @@ warning: this config for demo use only! NOT A PRODUCTION SOLUTION
 nano config_basic.yaml
 #paste this to config_basic.yaml
 
+#Change storageClass for your availability zone. For example: storageClass: csi-ceph-ssd-gz1-retain
 singleuser:
   defaultUrl: "/lab"
   storage:
