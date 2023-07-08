@@ -2,8 +2,7 @@
 
 
 ### We will install and test JupyterHub in k8s as a service from VK Cloud Solutions
-
-#### Tested with Kubernetes 1.20.4, Ubuntu 20.04, Helm chart for JupyterHub 1.1.3, JupyterHub 1.4.2
+#### Tested with Kubernetes 1.23.13, Ubuntu 22.04, Helm chart for JupyterHub 1.1.3, JupyterHub 1.4.2
 
 
 ## Running JupyterHub on Kubernetes useful links
@@ -37,6 +36,16 @@ Kubernetes as a Service: https://mcs.mail.ru/app/services/containers/add/
 You may have trouble with Gatekeeper. So please delete it. 
 https://mcs.mail.ru/docs/base/k8s/k8s-addons/k8s-gatekeeper/k8s-opa#udalenie
 
+You have to install keystone-auth for k8s version 1.23 or higer
+More information about changes see by link 
+https://mcs.mail.ru/docs/base/k8s/concepts/access-management#1509-7
+
+To install use instruction https://mcs.mail.ru/docs/base/k8s/connect/kubectl#9980-5
+Don't forget to run after installation keystone-auth
+```console
+source /home/ubuntu/.bashrc
+```
+
 ### Install kubectl
 [https://mcs.mail.ru/help/ru_RU/k8s-start/connect-k8s  ](https://mcs.mail.ru/docs/ru/base/k8s/connect/kubectl)  
 https://kubernetes.io/ru/docs/tasks/tools/install-kubectl/  
@@ -51,6 +60,13 @@ sudo mv ./kubectl /usr/local/bin/kubectl
 ```console
 export KUBECONFIG=/replace_with_path/to_your_kubeconfig.yaml
 ```
+Replace credentials in your_kubeconfig.yaml
+```console
+   - name: "OS_PASSWORD"
+     value: "vkcloud_account_password"
+```
+
+
 ### also it will be easier to work with kubectl while enabling autocomplete and using alias
 ```console
 alias k=kubectl
@@ -69,12 +85,32 @@ https://docs.docker.com/engine/install/ubuntu/
 https://docs.docker.com/engine/reference/commandline/login/  
 https://ropenscilabs.github.io/r-docker-tutorial/04-Dockerhub.html   
 
+### (Mantadory) Repeat steps blow
+Update the apt package index and install packages to allow apt to use a repository over HTTPS:
+```console 
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+```
+Add Docker’s official GPG key:
+```console
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+```
+Use the following command to set up the repository:
+```console
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
 
 ## JupyterHub installation and testing part
 
 ### Install JupyterHub
 ```console
-helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
+helm repo add jupyterhub https://hub.jupyter.org/helm-chart/ --insecure-skip-tls-verify
 helm repo update
 ```
 
@@ -122,7 +158,7 @@ hub:
 #### Apply basic config and install JupyterHub
 ```console
 helm upgrade --cleanup-on-fail \
-  --install defaultinstall jupyterhub/jupyterhub \
+  --install defaultinstall jupyterhub/jupyterhub --insecure-skip-tls-verify \
   --namespace jupyterhub \
   --create-namespace \
   --version=1.1.3 \
@@ -195,7 +231,7 @@ proxy:
 #### Apply new config and upgrade JupyterHub
 ```console
 helm upgrade --cleanup-on-fail \
-  defaultinstall jupyterhub/jupyterhub \
+  --install defaultinstall jupyterhub/jupyterhub --insecure-skip-tls-verify \
   --namespace jupyterhub \
   --version=1.1.3 \
   --values config_lb.yaml \
@@ -336,7 +372,7 @@ proxy:
 #### Apply new config and upgrade JupyterHub
 ```console
 helm upgrade --cleanup-on-fail \
-  defaultinstall jupyterhub/jupyterhub \
+  --install defaultinstall jupyterhub/jupyterhub --insecure-skip-tls-verify \ \
   --namespace jupyterhub \
   --version=1.1.3 \
   --values config_intel.yaml \
