@@ -130,6 +130,9 @@ nano config_basic.yaml
 #paste this to config_basic.yaml
 
 #Change storageClass for your availability zone. For example: storageClass: csi-ceph-ssd-gz1-retain
+scheduling:
+  userScheduler:
+    enabled: false
 singleuser:
   defaultUrl: "/lab"
   storage:
